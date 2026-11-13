@@ -9,6 +9,7 @@
 //! крейте. Здесь расчёт инструментов ([`crate::tools`]) и команда «О
 //! расширении».
 
+use rustgis_kit::manifest::{Group, Item, Label, Layout, Menu, Tab};
 use rustgis_kit::runner::no_command;
 use rustgis_kit::{Call, Catalog, Failure, Lang, Options, Product, Store, Tool};
 use serde_json::{Value as J, json};
@@ -96,10 +97,8 @@ impl Product for Routeliner {
     }
 }
 
-/// Основа `plugin.json`: всё, кроме раздела `tools`. Вкладка ленты `tab`
-/// прячет инструменты в четыре меню по группам модуля, значки - имена
-/// из набора RustGIS (`crates/ui-egui/src/icons.rs`), иначе RustGIS
-/// рисует пазл.
+/// Основа `plugin.json`: всё, кроме разделов `tools` и `tab`, их строит
+/// [`manifest`].
 pub const MANIFEST: &str = r#"{
   "id": "routeliner",
   "name": "Routeliner",
@@ -114,31 +113,8 @@ pub const MANIFEST: &str = r#"{
   "commands": [
     { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "about", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
   ],
-  "tab": {
-    "label": "Routeliner",
-    "groups": [
-      {
-        "label": "Routeliner",
-        "items": [
-          { "menu": "Routes", "icon": "directions", "help": "Route check and calibration.", "items": ["tool:check-routes", "tool:calibrate-routes"] },
-          { "menu": "Events", "icon": "placement", "help": "Point events and sections on routes.", "items": ["tool:point-events", "tool:line-events"] },
-          { "menu": "Chainage", "icon": "measure", "help": "Picket stakeout and locating points on routes.", "items": ["tool:pickets", "tool:locate-points"] },
-          { "menu": "Profile", "icon": "chart", "help": "Profile table and profile drawing.", "items": ["tool:profile-table", "tool:profile-drawing"] },
-          "about"
-        ]
-      }
-    ]
-  },
   "i18n": {
     "ru": {
-      "Routes": "Маршруты",
-      "Route check and calibration.": "Проверка и калибровка маршрутов.",
-      "Events": "События",
-      "Point events and sections on routes.": "Точечные события и участки на маршрутах.",
-      "Chainage": "Пикетаж",
-      "Picket stakeout and locating points on routes.": "Пикетная разбивка и привязка точек к маршрутам.",
-      "Profile": "Профиль",
-      "Profile table and profile drawing.": "Таблица и чертёж профиля.",
       "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.": "События на маршрутах и пикетаж для RustGIS. Маршруты собираются из перепутанных частей, пикетаж берётся из ведомости с пикетажными уравнениями или по контрольным точкам, а каждая запись, которую нельзя поставить, попадает в таблицу ошибок с причиной. Инструменты считают так же, как модуль QGIS Routeliner.",
       "About\nRouteliner": "О расширении\nRouteliner",
       "About the extension: version, a short description and links.": "О расширении: версия, краткое описание и ссылки."
@@ -157,8 +133,116 @@ pub const HIDDEN: &[(&str, &str)] = &[
     ("profile_table", "BAND"),
 ];
 
-/// `plugin.json` с разделом `tools` и переводами его строк.
+/// Меню вкладки: у инструмента в RustGIS значка нет, поэтому инструменты
+/// лежат в меню со значком. Значки - имена из набора RustGIS (`ALL`
+/// в `crates/ui-egui/src/icons.rs`), чужое имя рисуется пустым квадратом.
+static ROUTES: Menu = Menu {
+    label: Label {
+        en: "Check and calibrate",
+        ru: "Проверка и калибровка",
+    },
+    icon: Some("directions"),
+    help: Some(Label {
+        en: "Route check and calibration.",
+        ru: "Проверка и калибровка маршрутов.",
+    }),
+    layout: None,
+    items: &[Item::Tool("check_routes"), Item::Tool("calibrate_routes")],
+};
+static EVENTS: Menu = Menu {
+    label: Label {
+        en: "Place events",
+        ru: "Постановка событий",
+    },
+    icon: Some("placement"),
+    help: Some(Label {
+        en: "Point events and sections on routes.",
+        ru: "Точечные события и участки на маршрутах.",
+    }),
+    layout: None,
+    items: &[Item::Tool("point_events"), Item::Tool("line_events")],
+};
+static CHAINAGE: Menu = Menu {
+    label: Label {
+        en: "Pickets and locating",
+        ru: "Пикеты и привязка",
+    },
+    icon: Some("measure"),
+    help: Some(Label {
+        en: "Picket stakeout and locating points on routes.",
+        ru: "Пикетная разбивка и привязка точек к маршрутам.",
+    }),
+    layout: None,
+    items: &[Item::Tool("pickets"), Item::Tool("locate_points")],
+};
+static PROFILE: Menu = Menu {
+    label: Label {
+        en: "Table and drawing",
+        ru: "Таблица и чертёж",
+    },
+    icon: Some("chart"),
+    help: Some(Label {
+        en: "Profile table and profile drawing.",
+        ru: "Таблица и чертёж профиля.",
+    }),
+    layout: None,
+    items: &[Item::Tool("profile_table"), Item::Tool("profile_drawing")],
+};
+
+/// Своя вкладка ленты: группы модуля и справка.
+pub static TAB: Tab = Tab {
+    label: Label {
+        en: "Routeliner",
+        ru: "Routeliner",
+    },
+    groups: &[
+        Group {
+            label: Label {
+                en: "Routes",
+                ru: "Маршруты",
+            },
+            layout: Layout::Large,
+            items: &[Item::Menu(&ROUTES)],
+        },
+        Group {
+            label: Label {
+                en: "Events",
+                ru: "События",
+            },
+            layout: Layout::Large,
+            items: &[Item::Menu(&EVENTS)],
+        },
+        Group {
+            label: Label {
+                en: "Chainage",
+                ru: "Пикетаж",
+            },
+            layout: Layout::Large,
+            items: &[Item::Menu(&CHAINAGE)],
+        },
+        Group {
+            label: Label {
+                en: "Profile",
+                ru: "Профиль",
+            },
+            layout: Layout::Large,
+            items: &[Item::Menu(&PROFILE)],
+        },
+        Group {
+            label: Label {
+                en: "Help",
+                ru: "Справка",
+            },
+            layout: Layout::Large,
+            items: &[Item::Command("about")],
+        },
+    ],
+};
+
+/// `plugin.json` с разделами `tools` и `tab` и переводами их строк.
 pub fn manifest(catalog: &Catalog) -> Result<String, String> {
-    let (tools, ru) = rustgis_kit::manifest::tools_section_hiding(catalog, &OPTIONS, HIDDEN);
-    rustgis_kit::manifest::splice(MANIFEST, &tools, &ru)
+    let (tools, mut ru) = rustgis_kit::manifest::tools_section_hiding(catalog, &OPTIONS, HIDDEN);
+    let (tab, tab_ru) = rustgis_kit::manifest::tab_section(&TAB, catalog, &OPTIONS, &["about"])?;
+    ru.extend(tab_ru);
+    rustgis_kit::manifest::splice_all(MANIFEST, &tools, Some(&tab), &ru)
 }

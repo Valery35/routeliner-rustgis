@@ -25,9 +25,11 @@ The Russian version of this text, with the same sections and tables, is
 | 5.01 | Profile table | yes, without rasters |
 | 5.02 | Profile drawing | yes, grid rows by the template |
 
-In RustGIS the extension has a ribbon tab of its own, Routeliner. The tools
-sit on it in four menus by the plugin's groups «Routes», «Events»,
-«Chainage» and «Profile», next to the About button.
+In RustGIS the extension has a ribbon tab of its own, Routeliner, with the
+groups «Routes», «Events», «Chainage», «Profile» and «Help». Every tool
+group holds one menu with an icon, and the «Help» group holds the About
+button. The `rustgis-kit` crate builds the tab from the `TAB` description
+in `src/product.rs`.
 
 Tool 1.02 assembles a route from all features with the same ID, orders the
 parts by their joints and sends routes with a gap or a branch to the error
@@ -127,7 +129,7 @@ plugin.
 
 The `rustgis-kit` crate comes in as a git dependency from
 [github.com/Valery35/rustgis-kit](https://github.com/Valery35/rustgis-kit)
-at tag v0.1.7.
+at tag v0.1.9.
 
 ```bash
 cargo build

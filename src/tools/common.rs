@@ -468,7 +468,7 @@ pub fn read_ledger(
 
 /// Геометрия линии выхода: один кусок - `{"points"}`, несколько -
 /// `{"parts"}`. Высоты нет: выходы модуля пишутся без Z. `ms` -
-/// M-значения вершин (`OUT_M`), они идут рядом членом `m`.
+/// M-значения вершин (`OUT_M`), они идут рядом членом `measure`.
 pub fn line_geometry(pieces: &[Vec<P3>], ms: Option<&[Vec<f64>]>) -> J {
     let pts: Vec<Vec<J>> = pieces
         .iter()
@@ -480,7 +480,7 @@ pub fn line_geometry(pieces: &[Vec<P3>], ms: Option<&[Vec<f64>]>) -> J {
         json!({"parts": pts})
     };
     if let Some(ms) = ms {
-        g["m"] = if ms.len() == 1 {
+        g["measure"] = if ms.len() == 1 {
             json!(ms[0])
         } else {
             json!(ms)

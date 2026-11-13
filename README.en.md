@@ -83,8 +83,9 @@ plugin.
 
 ## Build and check
 
-The `rustgis-kit` crate comes in as a path dependency `../rustgis-kit`,
-and its version is 0.1.1.
+The `rustgis-kit` crate comes in as a git dependency from
+[github.com/Valery35/rustgis-kit](https://github.com/Valery35/rustgis-kit)
+at tag v0.1.2.
 
 ```bash
 cargo build

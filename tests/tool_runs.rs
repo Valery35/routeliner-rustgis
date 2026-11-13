@@ -36,7 +36,7 @@ fn compare(exp: &J, got: &J, path: &str, tol: &Tol, worst: &mut Worst, bad: &mut
         (J::Number(a), J::Number(b)) => {
             let (a, b) = (a.as_f64().unwrap(), b.as_f64().unwrap());
             let d = (a - b).abs();
-            let (t, w) = if path.contains("/m") {
+            let (t, w) = if path.contains("/measure") {
                 (tol.m, &mut worst.m)
             } else if path.contains("geometry") {
                 (tol.xy, &mut worst.xy)

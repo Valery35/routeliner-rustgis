@@ -64,8 +64,9 @@ fn compare(exp: &J, got: &J, path: &str, tol: &Tol, worst: &mut Worst, bad: &mut
                     None => bad.push(format!("{path}/{k}: нет")),
                 }
             }
+            // named - поля записи источника для RustGIS, в прогоне их даёт keep_source
             for k in b.keys() {
-                if !a.contains_key(k) {
+                if !a.contains_key(k) && k != "named" {
                     bad.push(format!("{path}/{k}: лишний"));
                 }
             }

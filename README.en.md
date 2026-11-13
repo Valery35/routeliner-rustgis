@@ -68,8 +68,9 @@ design of RustGIS give four differences between the extension and the
 plugin.
 
 - Chainage from geometry M values does not work, because a RustGIS layer
-  has no M. The field «Chainage from the M values of the route geometry»
-  is in the window, but a route without M gets chainage by length.
+  has no M. The fields «Chainage from the M values of the route geometry»
+  and «Metres per M unit» are hidden in the RustGIS window, and a route
+  without a ledger gets chainage by length.
 - The extension computes the M values of the 1.03 result, but they do not
   reach the RustGIS layer. The chainage of the start and the end stays in
   the `st_from` and `st_to` fields.
@@ -85,7 +86,7 @@ plugin.
 
 The `rustgis-kit` crate comes in as a git dependency from
 [github.com/Valery35/rustgis-kit](https://github.com/Valery35/rustgis-kit)
-at tag v0.1.2.
+at tag v0.1.4.
 
 ```bash
 cargo build

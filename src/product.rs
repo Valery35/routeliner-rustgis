@@ -96,7 +96,10 @@ impl Product for Routeliner {
     }
 }
 
-/// Основа `plugin.json`: всё, кроме раздела `tools`.
+/// Основа `plugin.json`: всё, кроме раздела `tools`. Вкладка ленты `tab`
+/// прячет инструменты в четыре меню по группам модуля, значки - имена
+/// из набора RustGIS (`crates/ui-egui/src/icons.rs`), иначе RustGIS
+/// рисует пазл.
 pub const MANIFEST: &str = r#"{
   "id": "routeliner",
   "name": "Routeliner",
@@ -109,10 +112,33 @@ pub const MANIFEST: &str = r#"{
   "run": { "windows": ["bin/routeliner-rustgis.exe", "rustgis-plugin"] },
   "minRustgisVersion": "0.5.0",
   "commands": [
-    { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "info", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
+    { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "about", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
   ],
+  "tab": {
+    "label": "Routeliner",
+    "groups": [
+      {
+        "label": "Routeliner",
+        "items": [
+          { "menu": "Routes", "icon": "directions", "help": "Route check and calibration.", "items": ["tool:check-routes", "tool:calibrate-routes"] },
+          { "menu": "Events", "icon": "placement", "help": "Point events and sections on routes.", "items": ["tool:point-events", "tool:line-events"] },
+          { "menu": "Chainage", "icon": "measure", "help": "Picket stakeout and locating points on routes.", "items": ["tool:pickets", "tool:locate-points"] },
+          { "menu": "Profile", "icon": "chart", "help": "Profile table and profile drawing.", "items": ["tool:profile-table", "tool:profile-drawing"] },
+          "about"
+        ]
+      }
+    ]
+  },
   "i18n": {
     "ru": {
+      "Routes": "Маршруты",
+      "Route check and calibration.": "Проверка и калибровка маршрутов.",
+      "Events": "События",
+      "Point events and sections on routes.": "Точечные события и участки на маршрутах.",
+      "Chainage": "Пикетаж",
+      "Picket stakeout and locating points on routes.": "Пикетная разбивка и привязка точек к маршрутам.",
+      "Profile": "Профиль",
+      "Profile table and profile drawing.": "Таблица и чертёж профиля.",
       "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.": "События на маршрутах и пикетаж для RustGIS. Маршруты собираются из перепутанных частей, пикетаж берётся из ведомости с пикетажными уравнениями или по контрольным точкам, а каждая запись, которую нельзя поставить, попадает в таблицу ошибок с причиной. Инструменты считают так же, как модуль QGIS Routeliner.",
       "About\nRouteliner": "О расширении\nRouteliner",
       "About the extension: version, a short description and links.": "О расширении: версия, краткое описание и ссылки."

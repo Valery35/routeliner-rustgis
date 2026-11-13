@@ -371,6 +371,41 @@ fn plugin_json_is_current() {
             "profile-drawing"
         ]
     );
+    // вкладка ленты: каждый пункт - свой инструмент или команда, каждый
+    // инструмент ровно в одном меню, у меню значок, подписи переведены
+    let tab = &m["tab"];
+    assert_eq!(tab["label"], "Routeliner");
+    let groups = tab["groups"].as_array().unwrap();
+    assert!((1..=8).contains(&groups.len()));
+    let mut in_menus = Vec::new();
+    let commands: Vec<&str> = m["commands"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|c| c["id"].as_str().unwrap())
+        .collect();
+    for g in groups {
+        let items = g["items"].as_array().unwrap();
+        assert!((1..=16).contains(&items.len()));
+        for it in items {
+            if let Some(menu) = it["menu"].as_str() {
+                assert!(it["icon"].is_string(), "{menu}");
+                assert!(m["i18n"]["ru"][menu].is_string(), "{menu}");
+                assert!(m["i18n"]["ru"][it["help"].as_str().unwrap()].is_string());
+                for t in it["items"].as_array().unwrap() {
+                    let id = t.as_str().unwrap().strip_prefix("tool:").unwrap();
+                    assert!(ids.contains(&id), "{id}");
+                    in_menus.push(id);
+                }
+            } else {
+                assert!(commands.contains(&it.as_str().unwrap()), "{it}");
+            }
+        }
+    }
+    in_menus.sort_unstable();
+    let mut all = ids.clone();
+    all.sort_unstable();
+    assert_eq!(in_menus, all);
     // скрытые поля не попадают в окно
     let all = text.to_lowercase();
     for hidden in ["\"use_m\"", "\"m_factor\"", "\"band\""] {

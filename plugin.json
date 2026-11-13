@@ -10,8 +10,23 @@
   "run": { "windows": ["bin/routeliner-rustgis.exe", "rustgis-plugin"] },
   "minRustgisVersion": "0.5.0",
   "commands": [
-    { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "info", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
+    { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "about", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
   ],
+  "tab": {
+    "label": "Routeliner",
+    "groups": [
+      {
+        "label": "Routeliner",
+        "items": [
+          { "menu": "Routes", "icon": "directions", "help": "Route check and calibration.", "items": ["tool:check-routes", "tool:calibrate-routes"] },
+          { "menu": "Events", "icon": "placement", "help": "Point events and sections on routes.", "items": ["tool:point-events", "tool:line-events"] },
+          { "menu": "Chainage", "icon": "measure", "help": "Picket stakeout and locating points on routes.", "items": ["tool:pickets", "tool:locate-points"] },
+          { "menu": "Profile", "icon": "chart", "help": "Profile table and profile drawing.", "items": ["tool:profile-table", "tool:profile-drawing"] },
+          "about"
+        ]
+      }
+    ]
+  },
   "tools": [
     {"id":"check-routes","name":"1.02 Route check","params":[{"kind":"vectorLayer","label":"Route layer (lines)","name":"routes","required":true},{"default":"route_id","kind":"field","label":"Route ID field","name":"route_id"},{"default":0.01,"kind":"number","label":"Part joint tolerance, m","name":"snap"},{"default":false,"kind":"bool","label":"Allow gaps (a section across a gap comes out as a multi-line)","name":"allow_gaps"},{"default":false,"kind":"bool","label":"3D length (with Z)","name":"use_z"},{"default":false,"kind":"bool","label":"Reverse route direction","name":"reverse"},{"kind":"bool","label":"Errors","name":"errors"}],"summary":"Assembles every route from all features with the same ID.","toolbox":"Routeliner"},
     {"id":"calibrate-routes","name":"1.03 Calibrate routes","params":[{"kind":"vectorLayer","label":"Route layer (lines)","name":"routes","required":true},{"default":"route_id","kind":"field","label":"Route ID field","name":"route_id"},{"default":0.01,"kind":"number","label":"Part joint tolerance, m","name":"snap"},{"default":false,"kind":"bool","label":"Allow gaps (a section across a gap comes out as a multi-line)","name":"allow_gaps"},{"default":false,"kind":"bool","label":"3D length (with Z)","name":"use_z"},{"default":false,"kind":"bool","label":"Reverse route direction","name":"reverse"},{"choices":["ПК и плюс (ПК 15+35, 15+35,5, ПК -1+50, +35)","Kilometre and metres (км 1+535)","Railway notation (км 12 ПК 3+45)","Metres as a number (1535,5)","Kilometres as a decimal (1,535)"],"default":"ПК и плюс (ПК 15+35, 15+35,5, ПК -1+50, +35)","kind":"choice","label":"Station notation","name":"format"},{"default":100.0,"kind":"number","label":"Picket length, m","name":"picket"},{"default":0.0,"kind":"number","label":"Route start station (without a ledger), m","name":"start"},{"kind":"layer","label":"Chainage ledger (optional)","name":"ledger"},{"kind":"field","label":"Ledger: route ID field","name":"lg_route"},{"kind":"field","label":"Ledger: station field","name":"lg_station"},{"kind":"numericField","label":"Ledger: distance field (measure along the axis)","name":"lg_measure"},{"kind":"field","label":"Ledger: station ahead field (equation)","name":"lg_ahead"},{"kind":"field","label":"Ledger: chainage system field","name":"lg_system"},{"kind":"text","label":"Chainage system (value of the system field)","name":"system"},{"kind":"pointLayer","label":"Control points with stations (optional)","name":"control"},{"kind":"field","label":"Control points: station field","name":"ct_station"},{"kind":"field","label":"Control points: route ID field (optional)","name":"ct_route"},{"default":10.0,"kind":"number","label":"Search radius for control points, m","name":"ct_radius"},{"choices":["no M","measure along the axis, m","chainage, m"],"default":"chainage, m","kind":"choice","label":"M values of the result","name":"out_m"},{"kind":"bool","label":"Errors","name":"errors"}],"summary":"Assembles the routes and writes M values into their geometry, that is the chainage or the measure along the axis at every vertex.","toolbox":"Routeliner"},
@@ -109,6 +124,14 @@
       "no M": "без M",
       "no vertices": "без вершин",
       "only with a turn or a grade break": "только с поворотом или изломом уклона",
+      "Routes": "Маршруты",
+      "Route check and calibration.": "Проверка и калибровка маршрутов.",
+      "Events": "События",
+      "Point events and sections on routes.": "Точечные события и участки на маршрутах.",
+      "Chainage": "Пикетаж",
+      "Picket stakeout and locating points on routes.": "Пикетная разбивка и привязка точек к маршрутам.",
+      "Profile": "Профиль",
+      "Profile table and profile drawing.": "Таблица и чертёж профиля.",
       "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.": "События на маршрутах и пикетаж для RustGIS. Маршруты собираются из перепутанных частей, пикетаж берётся из ведомости с пикетажными уравнениями или по контрольным точкам, а каждая запись, которую нельзя поставить, попадает в таблицу ошибок с причиной. Инструменты считают так же, как модуль QGIS Routeliner.",
       "About\nRouteliner": "О расширении\nRouteliner",
       "About the extension: version, a short description and links.": "О расширении: версия, краткое описание и ссылки."

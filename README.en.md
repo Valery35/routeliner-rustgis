@@ -25,6 +25,10 @@ The Russian version of this text, with the same sections and tables, is
 | 5.01 | Profile table | yes, without rasters |
 | 5.02 | Profile drawing | yes, grid rows by the template |
 
+In RustGIS the extension has a ribbon tab of its own, Routeliner. The tools
+sit on it in four menus by the plugin's groups «Routes», «Events»,
+«Chainage» and «Profile», next to the About button.
+
 Tool 1.02 assembles a route from all features with the same ID, orders the
 parts by their joints and sends routes with a gap or a branch to the error
 table. Tool 1.03 takes the chainage from control points, from a ledger with

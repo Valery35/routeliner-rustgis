@@ -120,7 +120,7 @@ RustGIS отдаёт слои в градусах WGS 84 без Z и без M. �
 
 Крейт `rustgis-kit` подключён зависимостью git с
 [github.com/Valery35/rustgis-kit](https://github.com/Valery35/rustgis-kit)
-по тегу v0.1.9.
+по тегу v0.1.10.
 
 ```bash
 cargo build

@@ -10,5 +10,6 @@ pub mod assembler;
 pub mod chainage;
 pub mod errors;
 pub mod events;
+pub mod profile;
 pub mod route;
 pub mod stations;

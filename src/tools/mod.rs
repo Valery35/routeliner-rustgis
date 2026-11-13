@@ -11,7 +11,9 @@
 
 pub mod common;
 pub mod events;
+pub mod expr;
 pub mod prep;
+pub mod profile;
 
 use rustgis_kit::{Failure, Lang, Tool};
 use serde_json::Value as J;
@@ -25,6 +27,8 @@ pub const DONE: &[&str] = &[
     "line_events",
     "pickets",
     "locate_points",
+    "profile_table",
+    "profile_drawing",
 ];
 
 /// Расчёт инструмента: выходы по ключам и сообщения на языке показа.
@@ -37,6 +41,8 @@ pub fn run(tool: &Tool, values: &J, lang: Lang) -> Result<(J, Vec<String>), Fail
         "line_events" => events::events(&mut cx, true)?,
         "pickets" => events::pickets(&mut cx)?,
         "locate_points" => events::locate_points(&mut cx)?,
+        "profile_table" => profile::profile_table(&mut cx)?,
+        "profile_drawing" => profile::profile_drawing(&mut cx)?,
         other => return Err(Failure::Run(other.to_string())),
     };
     Ok((out, cx.messages()))

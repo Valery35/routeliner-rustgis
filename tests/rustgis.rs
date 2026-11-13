@@ -258,6 +258,78 @@ fn locate_points_through_rustgis() {
     );
 }
 
+/// 5.01 через RustGIS, его слой точек - таблицей в 5.02. У слоёв RustGIS
+/// нет Z, поэтому z_axis пусто и строки отметок пропускаются, а сетка
+/// с расстояниями, пикетами и планом строится.
+#[test]
+fn profile_through_rustgis() {
+    let r = run("profile_table", "demo_no_raster");
+    let v = &r["values"];
+    let mut params = json!({"routes": "Routes", "ledger": "Ledger", "pois": "Defects"});
+    for k in [
+        "ROUTE_ID",
+        "LG_ROUTE",
+        "LG_STATION",
+        "LG_MEASURE",
+        "LG_AHEAD",
+        "LG_SYSTEM",
+        "SYSTEM",
+        "PICKET_STEP",
+        "STEP",
+        "VERTICES",
+        "POI_LABEL",
+        "CORRIDOR",
+    ] {
+        params[k.to_lowercase()] = v[k].clone();
+    }
+    let req = json!({"abi": 1, "kind": "tool", "id": "profile-table", "lang": "ru", "params": params,
+        "layers": {"Routes": lines_layer(&r["input"]["ROUTES"]),
+                   "Ledger": table_layer(&r["input"]["LEDGER"]),
+                   "Defects": points_layer(&r["input"]["POIS"])}});
+    let reply = ask(&req);
+    let ok = &reply["ok"];
+    assert!(ok.is_object(), "{reply}");
+    let table = &ok["layers"][0]["geojson"];
+    let got = table["features"].as_array().unwrap();
+    let exp = r["output"]["OUTPUT"]["features"].as_array().unwrap();
+    assert_eq!(got.len(), exp.len());
+    for (g, e) in got.iter().zip(exp) {
+        let p = &g["properties"];
+        assert_eq!(p["kind"], e["values"][2]);
+        assert_eq!(p["pk"], e["values"][6]);
+        let d = (p["m"].as_f64().unwrap() - e["values"][3].as_f64().unwrap()).abs();
+        assert!(d <= 1e-3, "m: {d}");
+        assert!(p["z_axis"].is_null());
+    }
+    // итог 5.01 - таблицей в 5.02
+    let req = json!({"abi": 1, "kind": "tool", "id": "profile-drawing", "lang": "en",
+        "params": {"table": "Profile", "route": "R1"},
+        "layers": {"Profile": table}});
+    let reply = ask(&req);
+    let ok = &reply["ok"];
+    assert!(ok.is_object(), "{reply}");
+    assert_eq!(ok["layers"][0]["name"], "Profile, lines");
+    assert!(
+        ok["layers"][0]["geojson"]["features"]
+            .as_array()
+            .unwrap()
+            .len()
+            > 50
+    );
+    let texts = ok["layers"][1]["geojson"]["features"].as_array().unwrap();
+    assert!(texts.iter().any(|t| t["properties"]["text"] == "ПК 10+00"));
+    assert!(texts.iter().any(|t| t["properties"]["kind"] == "caption"
+        && t["properties"]["text"] == "Vertical scale 1:100"));
+    let msgs = ok["messages"].as_array().unwrap();
+    assert!(
+        msgs.iter().any(|m| m
+            .as_str()
+            .unwrap_or("")
+            .starts_with("Profile of route «R1»")),
+        "{msgs:?}"
+    );
+}
+
 #[test]
 fn about_and_unknown_command() {
     let reply = ask(&json!({"abi": 1, "kind": "command", "id": "about", "lang": "ru"}));
@@ -294,7 +366,14 @@ fn plugin_json_is_current() {
             "point-events",
             "line-events",
             "pickets",
-            "locate-points"
+            "locate-points",
+            "profile-table",
+            "profile-drawing"
         ]
     );
+    // скрытые поля не попадают в окно
+    let all = text.to_lowercase();
+    for hidden in ["\"use_m\"", "\"m_factor\"", "\"band\""] {
+        assert!(!all.contains(hidden), "{hidden}");
+    }
 }

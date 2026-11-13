@@ -22,8 +22,8 @@ The Russian version of this text, with the same sections and tables, is
 | 3.02 | Live layer of sections | no, 2.02 gives the same computation |
 | 4.01 | Picket stakeout | yes |
 | 4.02 | Locate points on routes | yes |
-| 5.01 | Profile table | next step |
-| 5.02 | Profile drawing | next step |
+| 5.01 | Profile table | yes, without rasters |
+| 5.02 | Profile drawing | yes, grid rows by the template |
 
 Tool 1.02 assembles a route from all features with the same ID, orders the
 parts by their joints and sends routes with a gap or a branch to the error
@@ -38,6 +38,15 @@ finds the nearest route, the measure, the station and the offset of a
 point. The result of events and locating repeats the fields of the source
 record and adds the `rl_*` fields, and a record that cannot be placed goes
 to the error table together with its fields.
+
+Tool 5.01 collects the points of a longitudinal profile at the start and
+the end of a route, at equations, whole pickets, axis vertices, at a
+constant step and at events within a corridor from the axis. Tool 5.02
+builds from this table a profile drawing in paper millimetres with an
+elevation scale, a grid of rows and a straightened plan. The plugin
+computes the grid row expressions as QGIS expressions, while the extension
+parses them itself. It understands numbers, table fields, the four
+arithmetic operations, parentheses and unary minus.
 
 ## Check against the plugin
 
@@ -55,8 +64,10 @@ repository, and only the plugin rebuilds it.
 | 2.02 | ledger, chainage in M, measure in M |
 | 4.01 | step 100 m with the ledger, step 500 m with chainage in M, step 100 m by length |
 | 4.02 | radius 50 m, radius 5 m |
+| 5.01 | demo without raster with events, all vertices of R1 and R3 |
+| 5.02 | drawing of R1 from the 5.01 table with terrain and the 4.02 plan |
 
-On all 17 runs the fields agree without deviation, the vertices differ by
+On all 20 runs the fields agree without deviation, the vertices differ by
 no more than 6·10⁻¹¹ m and M by no more than 5·10⁻¹¹ m. The test
 `tests/tool_runs.rs` prints these values when run with
 `cargo test -- --nocapture`. The run tolerance is 10⁻⁹ for fields and
@@ -69,7 +80,7 @@ the ПК labels by the same rule, so a label like «ПК 14+71.24» matches the
 plugin character for character.
 
 The test `tests/rustgis.rs` checks the whole path through RustGIS for 1.02,
-1.03, 2.01 and 4.02. The demo layers come in WGS 84 degrees without Z, as
+1.03, 2.01, 4.02 and for 5.01 followed by 5.02. The demo layers come in WGS 84 degrees without Z, as
 RustGIS sends them, and the lengths, measures, coordinates and offsets agree
 with the plugin run within 0.001 m.
 
@@ -78,7 +89,7 @@ with the plugin run within 0.001 m.
 RustGIS sends layers in WGS 84 degrees without Z and without M. The
 `rustgis-kit` crate converts them to metres of the UTM zone at the middle
 of the input and returns the result in degrees. This conversion and the
-design of RustGIS give five differences between the extension and the
+design of RustGIS give seven differences between the extension and the
 plugin.
 
 - Chainage from geometry M values does not work, because a RustGIS layer
@@ -95,6 +106,14 @@ plugin.
   edits of routes and tables needs extension sessions, and these are not
   in a RustGIS release yet. Tools 2.01 and 2.02 give the same computation
   in one run.
+- RustGIS extensions have no rasters, so 5.01 does not sample terrain
+  elevations and gives no `z_*` fields. The `z_axis` field is empty,
+  because a RustGIS layer has no Z. The elevations for the 5.02 drawing
+  come from a numeric table field that the user picks in the tool window.
+- The 5.02 window has neither the grid row matrix nor the drawing anchor
+  point, because RustGIS has no such field kinds. The grid rows come from
+  the «Pipeline» template, and the drawing is placed 100 mm below the
+  table, as the plugin does without an anchor point.
 - GeoJSON has no arcs, a route comes already as segments, and the
   extension measures the length along these segments. The plugin cuts an
   arc itself, at 0.02° per chord (`CURVE_ANGLE_DEG` in

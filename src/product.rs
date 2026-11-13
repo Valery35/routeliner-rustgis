@@ -124,7 +124,12 @@ pub const MANIFEST: &str = r#"{
 /// Поля, скрытые в окне RustGIS: (инструмент Processing, ключ), `*` - у
 /// всех. У слоёв RustGIS нет M, пикетаж из M там не работает, расчёт
 /// берёт умолчания из `tools.json`.
-pub const HIDDEN: &[(&str, &str)] = &[("*", "USE_M"), ("*", "M_FACTOR")];
+pub const HIDDEN: &[(&str, &str)] = &[
+    ("*", "USE_M"),
+    ("*", "M_FACTOR"),
+    // канал растров без растров не нужен
+    ("profile_table", "BAND"),
+];
 
 /// `plugin.json` с разделом `tools` и переводами его строк.
 pub fn manifest(catalog: &Catalog) -> Result<String, String> {

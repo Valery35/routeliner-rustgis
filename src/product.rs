@@ -1,6 +1,6 @@
 // Routeliner для RustGIS - события на маршрутах и пикетаж.
-// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 2.0 или новее.
-// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 3.0 или новее.
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Routeliner как продукт крейта `rustgis-kit`: что у расширения своё.
 //!
@@ -103,7 +103,7 @@ pub const MANIFEST: &str = r#"{
   "version": "0.1.0",
   "description": "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.",
   "author": "Inform++ LLC",
-  "license": "GPL-2.0-or-later",
+  "license": "GPL-3.0-or-later",
   "runtime": "process",
   "session": true,
   "run": { "windows": ["bin/routeliner-rustgis.exe", "rustgis-plugin"] },

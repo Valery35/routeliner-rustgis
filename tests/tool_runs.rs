@@ -1,6 +1,6 @@
 // Routeliner для RustGIS - события на маршрутах и пикетаж.
-// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 2.0 или новее.
-// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 3.0 или новее.
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Сверка с прогонами модуля QGIS: `fixtures/tool_runs.json` (собирает
 //! `tools/make_tool_runs.py` модуля). Каждый прогон перенесённого

@@ -110,7 +110,9 @@ cargo clippy --all-targets -- -D warnings
 
 ## Лицензия
 
-GNU GPL версии 2 или новее, как у модуля Routeliner.
+GNU GPL версии 3 или новее, полный текст лежит в [LICENSE](LICENSE). Модуль
+Routeliner выходит под GPL версии 2 или новее, а расширение собирается
+с крейтом `rustgis-kit` под Apache 2.0, который совместим с GPL версии 3.
 
 - - -
 

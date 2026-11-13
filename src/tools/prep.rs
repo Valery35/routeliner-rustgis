@@ -1,6 +1,6 @@
 // Routeliner для RustGIS - события на маршрутах и пикетаж.
-// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 2.0 или новее.
-// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 ООО «Информ++». Лицензия GPL 3.0 или новее.
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 //! Группа 1, подготовка: 1.02 «Проверка маршрутов» и 1.03 «Калибровка
 //! маршрутов» (`processing/algorithms.py`, `CheckRoutes`,

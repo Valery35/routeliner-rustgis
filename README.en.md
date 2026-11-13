@@ -116,7 +116,10 @@ rebuilds its runs, both copies are replaced as a whole.
 
 ## License
 
-GNU GPL version 2 or later, as the Routeliner plugin.
+GNU GPL version 3 or later, the full text is in [LICENSE](LICENSE). The
+Routeliner plugin comes under GPL version 2 or later, and the extension is
+built with the `rustgis-kit` crate under Apache 2.0, which is compatible
+with GPL version 3.
 
 - - -
 

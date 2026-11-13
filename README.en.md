@@ -104,7 +104,7 @@ plugin.
 
 The `rustgis-kit` crate comes in as a git dependency from
 [github.com/Valery35/rustgis-kit](https://github.com/Valery35/rustgis-kit)
-at tag v0.1.6.
+at tag v0.1.7.
 
 ```bash
 cargo build

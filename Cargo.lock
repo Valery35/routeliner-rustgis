@@ -104,8 +104,8 @@ dependencies = [
 
 [[package]]
 name = "rustgis-kit"
-version = "0.1.6"
-source = "git+https://github.com/Valery35/rustgis-kit?tag=v0.1.6#0486bf0a7d750aa45c40239285391cb3a3793047"
+version = "0.1.7"
+source = "git+https://github.com/Valery35/rustgis-kit?tag=v0.1.7#f11ff91531e3910c48c1521a9884db5a1d4ca9cd"
 dependencies = [
  "serde",
  "serde_json",

@@ -183,34 +183,9 @@ impl<'a> Cx<'a> {
     }
 
     /// Таблица ошибок: маршрут, код, пояснение на языке показа. `keep` -
-    /// поля записи источника (ключ поля-слоя).
-    /// Поля записи источника (`source`) из слоя `layer` - членом `named`:
-    /// крейт кладёт их в свойства объекта итога, как модуль повторяет поля
-    /// исходной записи. Поля итога с тем же именем не перекрываются.
-    pub fn keep_fields(&self, feats: &mut [J], layer: &str) {
-        let by_id: HashMap<i64, &J> = self
-            .layer(layer)
-            .into_iter()
-            .flatten()
-            .filter_map(|r| Some((r["id"].as_i64()?, &r["attrs"])))
-            .collect();
-        for f in feats {
-            let Some(attrs) = f["source"].as_i64().and_then(|id| by_id.get(&id)) else {
-                continue;
-            };
-            let named: serde_json::Map<String, J> = attrs
-                .as_object()
-                .into_iter()
-                .flatten()
-                .filter(|(k, _)| !k.starts_with("rl_"))
-                .map(|(k, v)| (k.clone(), v.clone()))
-                .collect();
-            f["named"] = J::Object(named);
-        }
-    }
-
+    /// поле-слой источника: поля записи переносит крейт по `keep_source`.
     pub fn errors_out(&self, errors: &[CoreError], keep: Option<&str>) -> J {
-        let mut feats: Vec<J> = errors
+        let feats: Vec<J> = errors
             .iter()
             .map(|e| {
                 let mut f = json!({
@@ -223,9 +198,6 @@ impl<'a> Cx<'a> {
                 f
             })
             .collect();
-        if let Some(layer) = keep {
-            self.keep_fields(&mut feats, layer);
-        }
         let mut out = json!({
             "geometry": "none",
             "fields": [["rl_route", "string"], ["rl_error", "string"], ["rl_message", "string"]],

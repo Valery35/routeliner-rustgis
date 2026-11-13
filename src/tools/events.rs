@@ -67,7 +67,7 @@ pub fn events(cx: &mut Cx<'_>, line: bool) -> Result<J, Failure> {
         .collect();
     let out_m = cx.index("OUT_M");
     let parser = sys.loc.parser;
-    let (mut feats, bad, placed): (Vec<J>, Vec<CoreError>, usize) = if line {
+    let (feats, bad, placed): (Vec<J>, Vec<CoreError>, usize) = if line {
         let (ok, bad) = sys.loc.locate_lines(&records);
         let feats = ok
             .into_iter()
@@ -116,7 +116,6 @@ pub fn events(cx: &mut Cx<'_>, line: bool) -> Result<J, Failure> {
             None => e,
         })
         .collect();
-    cx.keep_fields(&mut feats, "EVENTS");
     let fields = if line {
         json!([
             ["rl_m_from", "double"],
@@ -239,7 +238,6 @@ pub fn locate_points(cx: &mut Cx<'_>) -> Result<J, Failure> {
             Err(e) => errors.push(e),
         }
     }
-    cx.keep_fields(&mut feats, "POINTS");
     let mut out = serde_json::Map::new();
     out.insert(
         "OUTPUT".into(),

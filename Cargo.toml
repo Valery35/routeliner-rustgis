@@ -1,0 +1,30 @@
+# Routeliner для RustGIS - события на маршрутах и пикетаж.
+# Copyright (C) 2026 ООО «Информ++». Лицензия GPL 2.0 или новее.
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+[package]
+name = "routeliner-rustgis"
+description = "Routeliner для RustGIS: события на маршрутах и пикетаж, расширение-процесс на крейте rustgis-kit"
+version = "0.1.0"
+edition = "2024"
+license = "GPL-2.0-or-later"
+authors = ["ООО «Информ++»"]
+repository = "https://github.com/Valery35/routeliner"
+publish = false
+
+[dependencies]
+# общая основа расширений RustGIS линейки, пока по пути
+rustgis-kit = { path = "../rustgis-kit" }
+serde_json = "1"
+regex = "1"
+indexmap = "2"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"

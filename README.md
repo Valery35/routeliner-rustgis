@@ -29,7 +29,8 @@ RustGIS так же, как модуль QGIS Routeliner. Номера инст�
 «Маршруты», «События», «Пикетаж», «Профиль» и «Справка». В каждой группе
 инструментов одно меню со значком, а в группе «Справка» стоит кнопка
 «О расширении». Вкладку строит крейт `rustgis-kit` по описанию `TAB`
-в `src/product.rs`.
+в `src/product.rs`. Расширению нужен RustGIS 0.6.0 или новее, вкладка
+проверена в этой версии.
 
 Инструмент 1.02 собирает маршрут из всех объектов с одним ID, упорядочивает
 части по стыкам и отдаёт маршруты с разрывом или развилкой в таблицу
@@ -136,7 +137,7 @@ cargo clippy --all-targets -- -D warnings
 Пакет собирает сценарий `scripts\package.ps1`. Он делает сборку release
 и вызывает сценарий упаковки крейта из соседней папки `..\rustgis-kit`.
 В папке `dist` появляются папка `routeliner` для «Add Plugin Folder…»
-и пакет `routeliner-0.1.0.rgplugin` для установки из файла.
+и пакет `routeliner-0.1.1.rgplugin` для установки из файла.
 
 ```bash
 powershell -File scripts/package.ps1
@@ -172,4 +173,4 @@ Routeliner выходит под GPL версии 2 или новее, а рас
 
 Страница модуля: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner для RustGIS v0.1.0
+Routeliner для RustGIS v0.1.1

@@ -29,7 +29,8 @@ In RustGIS the extension has a ribbon tab of its own, Routeliner, with the
 groups «Routes», «Events», «Chainage», «Profile» and «Help». Every tool
 group holds one menu with an icon, and the «Help» group holds the About
 button. The `rustgis-kit` crate builds the tab from the `TAB` description
-in `src/product.rs`.
+in `src/product.rs`. The extension needs RustGIS 0.6.0 or later, and the
+tab is checked in that version.
 
 Tool 1.02 assembles a route from all features with the same ID, orders the
 parts by their joints and sends routes with a gap or a branch to the error
@@ -145,7 +146,7 @@ and the environment variable `ROUTELINER_WRITE_MANIFEST=1` with
 The script `scripts\package.ps1` builds the package. It makes a release
 build and calls the packaging script of the crate from the neighbouring
 folder `..\rustgis-kit`. The `dist` folder then holds the `routeliner`
-folder for «Add Plugin Folder…» and the package `routeliner-0.1.0.rgplugin`
+folder for «Add Plugin Folder…» and the package `routeliner-0.1.1.rgplugin`
 for installing from a file.
 
 ```bash
@@ -183,4 +184,4 @@ Developed with the support of Inform++ LLC ([www.informpp.ru](https://www.inform
 
 Plugin page: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner for RustGIS v0.1.0
+Routeliner for RustGIS v0.1.1

@@ -18,6 +18,20 @@ QGIS - `C:\Dev\routeliner\doc\PUBLISH.md`.
 
 ## Журнал
 
+### Routeliner для RustGIS 0.1.1 - 16 ноября 2026 года
+
+Тег `rustgis-v0.1.1`, по слову автора «Выпускай и подавай».
+`minRustgisVersion` 0.6.0 (решение автора «Растгис предлагаю минимальный
+0.6.0 всюду»), расчёт тот же, что в 0.1.0. Соцсети не публиковались -
+выпуск без новых возможностей.
+
+| Площадка | Запись |
+|---|---|
+| GitHub | https://github.com/Valery35/routeliner-rustgis/releases/tag/rustgis-v0.1.1 - пакет `routeliner-0.1.1.rgplugin`, SHA-256 bd0cd700...4b24, исходники 08d3541 |
+| Dropbox | `ИИ\Routeliner\routeliner-0.1.1.rgplugin`, 0.1.0 в `arhiv` |
+| RustGIS автора | установлено 0.1.1 (`rustgis-cli plugins install`) |
+| Каталог RustGIS | заявка https://github.com/opengeos/rustgis-plugins/pull/67 - `registry/routeliner.json`, категории Vector и Analysis, ветка форка `patch-3` |
+
 ### Routeliner для RustGIS 0.1.0 - 16 ноября 2026 года
 
 Тег `rustgis-v0.1.0`, по слову автора «Публикуй и в мой растгис

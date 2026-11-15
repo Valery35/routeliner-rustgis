@@ -1,5 +1,9 @@
 # История версий Routeliner для RustGIS
 
+## 0.1.2 - не выпущена
+
+В описании расширения появилась ссылка на его страницу на GitHub, её показывает каталог расширений RustGIS. Расчёт инструментов не менялся.
+
 ## 0.1.1 - 16.11.2026
 
 Расширению теперь нужен RustGIS 0.6.0 или новее, потому что своя вкладка
@@ -31,4 +35,4 @@ Routeliner 0.5.2 на Rust и сверили каждый инструмент �
 
 Страница модуля: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner для RustGIS v0.1.1
+Routeliner для RustGIS v0.1.2

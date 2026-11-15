@@ -102,9 +102,10 @@ impl Product for Routeliner {
 pub const MANIFEST: &str = r#"{
   "id": "routeliner",
   "name": "Routeliner",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.",
   "author": "Inform++ LLC",
+  "homepage": "https://github.com/Valery35/routeliner-rustgis",
   "license": "GPL-3.0-or-later",
   "runtime": "process",
   "session": true,

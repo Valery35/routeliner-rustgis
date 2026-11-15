@@ -146,7 +146,7 @@ and the environment variable `ROUTELINER_WRITE_MANIFEST=1` with
 The script `scripts\package.ps1` builds the package. It makes a release
 build and calls the packaging script of the crate from the neighbouring
 folder `..\rustgis-kit`. The `dist` folder then holds the `routeliner`
-folder for «Add Plugin Folder…» and the package `routeliner-0.1.1.rgplugin`
+folder for «Add Plugin Folder…» and the package `routeliner-0.1.2.rgplugin`
 for installing from a file.
 
 ```bash
@@ -184,4 +184,4 @@ Developed with the support of Inform++ LLC ([www.informpp.ru](https://www.inform
 
 Plugin page: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner for RustGIS v0.1.1
+Routeliner for RustGIS v0.1.2

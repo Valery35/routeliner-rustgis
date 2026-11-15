@@ -373,6 +373,11 @@ fn plugin_json_is_current() {
     );
     // вкладка проверена в RustGIS 0.6.0, раньше её нельзя обещать
     assert_eq!(m["minRustgisVersion"], "0.6.0");
+    // каталог RustGIS показывает страницу расширения, адрес только https
+    assert_eq!(
+        m["homepage"],
+        "https://github.com/Valery35/routeliner-rustgis"
+    );
     // вкладка ленты: каждый пункт - свой инструмент или команда, каждый
     // инструмент ровно в одном меню, у меню значок, подписи переведены
     let tab = &m["tab"];

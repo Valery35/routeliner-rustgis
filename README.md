@@ -137,7 +137,7 @@ cargo clippy --all-targets -- -D warnings
 Пакет собирает сценарий `scripts\package.ps1`. Он делает сборку release
 и вызывает сценарий упаковки крейта из соседней папки `..\rustgis-kit`.
 В папке `dist` появляются папка `routeliner` для «Add Plugin Folder…»
-и пакет `routeliner-0.1.1.rgplugin` для установки из файла.
+и пакет `routeliner-0.1.2.rgplugin` для установки из файла.
 
 ```bash
 powershell -File scripts/package.ps1
@@ -173,4 +173,4 @@ Routeliner выходит под GPL версии 2 или новее, а рас
 
 Страница модуля: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner для RustGIS v0.1.1
+Routeliner для RustGIS v0.1.2

@@ -2,7 +2,7 @@
 
 Ссылки (появятся после выпуска):
 
-- выпуск https://github.com/Valery35/routeliner-rustgis/releases/tag/0.1.0
+- выпуск https://github.com/Valery35/routeliner-rustgis/releases/tag/rustgis-v0.1.0
 - модуль QGIS https://github.com/Valery35/routeliner
 
 ## Русский (сайт, Telegram, ВК, Facebook)
@@ -15,7 +15,7 @@ Routeliner для RustGIS 0.1.0 - пикетаж и события на марш
 
 Считают инструменты так же, как модуль QGIS, это сверено на его же примере.
 
-Расширение - https://github.com/Valery35/routeliner-rustgis/releases/tag/0.1.0
+Расширение - https://github.com/Valery35/routeliner-rustgis/releases/tag/rustgis-v0.1.0
 Модуль QGIS - https://github.com/Valery35/routeliner
 
 #RustGIS #QGIS #пикетаж #дороги #трубопроводы #ГИС
@@ -30,7 +30,7 @@ Chainage reads «ПК 15+35», «км 1+535» and railway notation, ledgers with
 
 The tools compute as the QGIS plugin does, checked on its own demo.
 
-https://github.com/Valery35/routeliner-rustgis/releases/tag/0.1.0
+https://github.com/Valery35/routeliner-rustgis/releases/tag/rustgis-v0.1.0
 https://github.com/Valery35/routeliner
 
 #RustGIS #QGIS #GIS #linearreferencing #roads #pipelines #opensource #rustlang
@@ -39,7 +39,7 @@ https://github.com/Valery35/routeliner
 
 Routeliner for RustGIS 0.1.0 - route events, chainage with station equations and longitudinal profiles from the QGIS plugin, now on a RustGIS tab.
 #RustGIS #QGIS #GIS
-https://github.com/Valery35/routeliner-rustgis/releases/tag/0.1.0
+https://github.com/Valery35/routeliner-rustgis/releases/tag/rustgis-v0.1.0
 
 ## Лента сайта
 

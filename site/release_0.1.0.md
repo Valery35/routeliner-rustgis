@@ -1,6 +1,6 @@
 # Routeliner для RustGIS 0.1.0 - текст выпуска на GitHub
 
-Тег 0.1.0, заголовок «Routeliner для RustGIS 0.1.0», к выпуску прикладывается пакет `routeliner-0.1.0.rgplugin`.
+Метка rustgis-v0.1.0, заголовок «Routeliner для RustGIS 0.1.0», к выпуску прикладывается пакет `routeliner-0.1.0.rgplugin`.
 
 ## Текст
 

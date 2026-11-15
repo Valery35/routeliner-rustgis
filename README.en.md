@@ -163,6 +163,8 @@ rebuilds its runs, both copies are replaced as a whole.
 | src/core | The core, a port of the plugin's `routeliner/core`. Stations, the chainage system with equations, route geometry with M, route assembly, event placement, error codes |
 | src/tools | Tools on the values of a plugin run, reading routes, the ledger, events and points |
 | scripts | Building the `.rgplugin` package |
+| .github/workflows | A Telegram message to the author about a published release, a file shared by the plugins of the line |
+| site | Release and post texts |
 | src/product.rs | The `rustgis-kit` product, the About command, the base of `plugin.json` |
 | src/pyfmt.rs | Rounding and message templates the way the plugin's Python writes them |
 | fixtures | Tool descriptions and plugin runs, an unchanged copy |

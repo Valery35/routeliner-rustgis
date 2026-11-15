@@ -31,6 +31,7 @@ QGIS - `C:\Dev\routeliner\doc\PUBLISH.md`.
 | Dropbox | `ИИ\Routeliner\routeliner-0.1.1.rgplugin`, 0.1.0 в `arhiv` |
 | RustGIS автора | установлено 0.1.1 (`rustgis-cli plugins install`) |
 | Каталог RustGIS | заявка https://github.com/opengeos/rustgis-plugins/pull/67 - `registry/routeliner.json`, категории Vector и Analysis, ветка форка `patch-3` |
+| Сайт informpp.ru | 16.11.2026 по слову автора «Делай сам, не жди моего слова» - https://www.informpp.ru/главная-страница/routeliner-rustgis и страница модуля https://www.informpp.ru/главная-страница/qgis-routeliner, код блоков «Встроить» собирает `site/build_site.py` |
 
 ### Routeliner для RustGIS 0.1.0 - 16 ноября 2026 года
 

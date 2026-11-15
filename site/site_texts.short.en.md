@@ -38,6 +38,8 @@ What it does
 
 How it differs from the plugin
 
+Extension page
+
 Release 0.1.1
 
 Extension source code

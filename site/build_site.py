@@ -30,6 +30,8 @@ RUST_RELEASES = RUST_CODE + "/releases"
 RUSTGIS = "https://github.com/opengeos/RustGIS"
 SITE = "https://www.informpp.ru/"
 ORDER = "https://www.informpp.ru/главная-страница/предприятиям"
+PAGE_MODULE = "https://www.informpp.ru/главная-страница/qgis-routeliner"
+PAGE_RUST = "https://www.informpp.ru/главная-страница/routeliner-rustgis"
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Golos+Text:wght@400;500;600&display=swap');
@@ -274,6 +276,7 @@ MODULE_TEXTS = {
         "rg.c2.p": "У расширения своя вкладка ленты RustGIS. Динамических слоёв, "
                    "демонстрационного примера, растров и M-значений в RustGIS "
                    "0.6.0 нет. Нужен RustGIS 0.6.0 или новее и Windows.",
+        "rg.page": "Страница расширения",
         "rg.release": "Выпуск " + RUST_VERSION,
         "rg.code": "Исходный код расширения",
         "inst.eyebrow": "Установка и документация",
@@ -351,6 +354,7 @@ MODULE_TEXTS = {
         "rg.c2.p": "The extension has its own RustGIS ribbon tab. RustGIS 0.6.0 "
                    "has no live layers, no demo example, no rasters and no M "
                    "values. RustGIS 0.6.0 or newer and Windows are required.",
+        "rg.page": "Extension page",
         "rg.release": "Release " + RUST_VERSION,
         "rg.code": "Extension source code",
         "inst.eyebrow": "Installation and documentation",
@@ -581,9 +585,9 @@ def page(name, brand, nav, body, texts, footer):
   <div class="wrap">
     %s &middot; <span data-i18n="ftr.line1"></span><br>
     <span data-i18n="ftr.line2"></span>,
-    <a href="%s">www.informpp.ru</a><br>
+    <a href="%s" target="_blank" rel="noopener">www.informpp.ru</a><br>
     <span data-i18n="ftr.line3"></span>
-    <a href="%s">www.informpp.ru/предприятиям</a>
+    <a href="%s" target="_blank" rel="noopener">www.informpp.ru/предприятиям</a>
   </div>
 </footer>
 
@@ -608,7 +612,10 @@ def head(prefix):
 
 
 def button(cls, key, href):
-    return '<a class="btn btn-%s" data-i18n="%s" href="%s"></a>' % (cls, key, href)
+    # Песочница блока «Встроить» не пускает переход верхнего окна, поэтому
+    # внешние ссылки открываются новой вкладкой.
+    return ('<a class="btn btn-%s" data-i18n="%s" href="%s" target="_blank" '
+            'rel="noopener"></a>' % (cls, key, href))
 
 
 def module_page():
@@ -658,7 +665,7 @@ def module_page():
        head("idea"), cards("idea"),
        head("tools"), tool_rows(texts, False),
        head("rg"), cards("rg"),
-       button("main", "rg.release", RUST_RELEASE), button("ghost", "rg.code", RUST_CODE),
+       button("main", "rg.page", PAGE_RUST), button("ghost", "rg.release", RUST_RELEASE),
        head("inst"), cards("inst"),
        button("main", "cta.install", CATALOG),
        button("ghost", "inst.catalog", CATALOG_VERSION),
@@ -720,7 +727,7 @@ def rust_page():
        head("lim"), limits,
        head("inst"),
        button("main", "cta.release", RUST_RELEASE),
-       button("ghost", "inst.module", CATALOG),
+       button("ghost", "inst.module", PAGE_MODULE),
        button("ghost", "inst.rustgis", RUSTGIS))
     nav = (("tools", "tools"), ("check", "check"), ("limits", "limits"),
            ("install", "install"))

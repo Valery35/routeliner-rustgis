@@ -13,13 +13,13 @@ The Russian version of this text, with the same sections and tables, is
 
 | Code | Tool | In the extension |
 |---|---|---|
-| 1.01 | Demo example | no, the reason is in the section on limits |
+| 1.01 | Demo example | yes, as layers and tables |
 | 1.02 | Route check | yes |
 | 1.03 | Calibrate routes | yes |
 | 2.01 | Point events | yes |
 | 2.02 | Sections (line events) | yes |
-| 3.01 | Live layer of point events | no, 2.01 gives the same computation |
-| 3.02 | Live layer of sections | no, 2.02 gives the same computation |
+| 3.01 | Live layer of point events | yes, as a session command |
+| 3.02 | Live layer of sections | yes, as a session command |
 | 4.01 | Picket stakeout | yes |
 | 4.02 | Locate points on routes | yes |
 | 5.01 | Profile table | yes, without rasters |
@@ -29,8 +29,22 @@ In RustGIS the extension has a ribbon tab of its own, Routeliner, with the
 groups «Routes», «Events», «Chainage», «Profile» and «Help». Every tool
 group holds one menu with an icon, and the «Help» group holds the About
 button. The `rustgis-kit` crate builds the tab from the `TAB` description
-in `src/product.rs`. The extension needs RustGIS 0.6.0 or later, and the
-tab is checked in that version.
+in `src/product.rs`. The extension needs RustGIS 0.7.0 or later, the
+version that brought extension sessions.
+
+Tool 1.01 puts the demo example of the plugin into the project as layers
+and tables in EPSG:32640 and runs it through the extension tools at once.
+The results of the self-check go next to it, and the last log line says
+«CHECK PASSED» or «CHECK FAILED». The example records come from the same
+random number generator as in Python, so with the same seed they match
+the records of the plugin.
+
+The live layers 3.01 and 3.02 are commands in the «Place events» menu.
+The command window repeats the fields of 2.01 or 2.02 and the layer name.
+The command puts the event layer and the error layer into the Routeliner
+group. After an edit of the routes, the event table or the ledger RustGIS
+sends the extension a session event, and the layer is recomputed by the
+same computation.
 
 Tool 1.02 assembles a route from all features with the same ID, orders the
 parts by their joints and sends routes with a gap or a branch to the error
@@ -57,7 +71,7 @@ arithmetic operations, parentheses and unary minus.
 
 ## Check against the plugin
 
-The check uses the file `fixtures/tool_runs.json` of Routeliner 0.5.2. The
+The check uses the file `fixtures/tool_runs.json` of Routeliner 0.5.3. The
 plugin script `tools/make_tool_runs.py` builds it on demo 1.01 with seed 1
 in UTM zone 40N on WGS 84, and the computation is the plugin core without
 QGIS. An unchanged copy of the file lies in the `fixtures` folder of this
@@ -91,7 +105,14 @@ The test `tests/rustgis.rs` checks the whole path through RustGIS for 1.02,
 RustGIS sends them, and the lengths, measures, coordinates and offsets agree
 with the plugin run within 0.001 m.
 
-## Limits of RustGIS 0.6.0
+The test `tests/demo.rs` checks the records of example 1.01 against the
+plugin record `demo_seed1.json` and the self-check result against
+`tool_1_01.json`. Both records lie unchanged in `tests/data`. The test
+`tests/live.rs` checks 3.01 and 3.02 on a fake RustGIS. The layer matches
+the result of 2.01 and 2.02, is recomputed after an edit of the table and
+of a route, and stays in place without edits.
+
+## Limits of RustGIS 0.7.0
 
 RustGIS sends layers in WGS 84 degrees without Z and without M. The
 `rustgis-kit` crate converts them to metres of the UTM zone at the middle
@@ -106,13 +127,13 @@ plugin.
 - The extension computes the M values of the 1.03, 2.01, 2.02 and 4.01
   results, but they do not reach the RustGIS layer. The chainage and the
   measure stay in the result fields.
-- There is no tool 1.01, because it writes a folder with a GeoPackage and
-  a raster, and the crate has neither a folder field nor an output as a set
-  of layers.
-- There are no live layers 3.01 and 3.02, because recomputing a layer on
-  edits of routes and tables needs extension sessions, and these are not
-  in a RustGIS release yet. Tools 2.01 and 2.02 give the same computation
-  in one run.
+- Example 1.01 writes neither a GeoPackage nor a terrain raster, because
+  the RustGIS file field only picks an input file. The raster for the
+  profile self-check is built in memory and sampled bilinearly, as in QGIS.
+- The binding of a live layer 3.01 or 3.02 lives in the session program
+  until RustGIS closes or the extension is turned off. The project has no
+  place to keep it, and after a new start of RustGIS the layer stays a
+  plain one.
 - RustGIS extensions have no rasters, so 5.01 does not sample terrain
   elevations and gives no `z_*` fields. The `z_axis` field is empty,
   because a RustGIS layer has no Z. The elevations for the 5.02 drawing
@@ -146,7 +167,7 @@ and the environment variable `ROUTELINER_WRITE_MANIFEST=1` with
 The script `scripts\package.ps1` builds the package. It makes a release
 build and calls the packaging script of the crate from the neighbouring
 folder `..\rustgis-kit`. The `dist` folder then holds the `routeliner`
-folder for «Add Plugin Folder…» and the package `routeliner-0.1.2.rgplugin`
+folder for «Add Plugin Folder…» and the package `routeliner-0.2.0.rgplugin`
 for installing from a file.
 
 ```bash
@@ -167,6 +188,7 @@ rebuilds its runs, both copies are replaced as a whole.
 | .github/workflows | A Telegram message to the author about a published release, a file shared by the plugins of the line |
 | site | Release and post texts |
 | src/product.rs | The `rustgis-kit` product, the About command, the base of `plugin.json` |
+| src/live.rs | Live layers 3.01 and 3.02 on the extension session |
 | src/pyfmt.rs | Rounding and message templates the way the plugin's Python writes them |
 | fixtures | Tool descriptions and plugin runs, an unchanged copy |
 | tests | The check against the runs and the path through RustGIS |
@@ -184,4 +206,4 @@ Developed with the support of Inform++ LLC ([www.informpp.ru](https://www.inform
 
 Plugin page: [github.com/Valery35/routeliner](https://github.com/Valery35/routeliner)
 
-Routeliner for RustGIS v0.1.2
+Routeliner for RustGIS v0.2.0

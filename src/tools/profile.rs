@@ -415,15 +415,18 @@ pub fn drawing(cx: &mut Cx<'_>) -> Result<(J, f64), Failure> {
         .f("h", sheet.horizon),
     );
     let width = sheet.width;
-    Ok((json!({
-        "LINES": {"geometry": "line",
-                  "fields": [["kind", "string"], ["row", "string"], ["color", "string"], ["width", "double"]],
-                  "features": lines},
-        "TEXTS": {"geometry": "point",
-                  "fields": [["text", "string"], ["kind", "string"], ["rot", "double"], ["size", "double"],
-                             ["halign", "string"], ["valign", "string"]],
-                  "features": texts},
-    }), width))
+    Ok((
+        json!({
+            "LINES": {"geometry": "line",
+                      "fields": [["kind", "string"], ["row", "string"], ["color", "string"], ["width", "double"]],
+                      "features": lines},
+            "TEXTS": {"geometry": "point",
+                      "fields": [["text", "string"], ["kind", "string"], ["rot", "double"], ["size", "double"],
+                                 ["halign", "string"], ["valign", "string"]],
+                      "features": texts},
+        }),
+        width,
+    ))
 }
 
 /// Участки текстовых строк по полю слоя: (мера начала, мера конца, текст).

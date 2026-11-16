@@ -30,13 +30,24 @@ pub const HOME: &str = "https://github.com/Valery35/routeliner";
 
 pub struct Routeliner {
     pub catalog: Catalog,
+    /// Привязки динамических слоёв сессии (3.01, 3.02).
+    pub live: crate::live::Live,
 }
 
 impl Routeliner {
     pub fn new() -> Result<Self, String> {
         Ok(Self {
             catalog: Catalog::parse(TOOLS_JSON)?,
+            live: crate::live::Live::default(),
         })
+    }
+
+    /// Динамический инструмент по id команды RustGIS.
+    fn live_of(&self, id: &str) -> Option<&'static str> {
+        crate::live::LIVE
+            .iter()
+            .map(|(l, _)| *l)
+            .find(|l| self.catalog.tool(l).is_some_and(|t| t.rg_id() == id))
     }
 }
 
@@ -95,10 +106,22 @@ impl Product for Routeliner {
         (tool.name == "demo").then(|| crate::core::demo::CRS.to_string())
     }
 
-    fn command(&self, _host: &mut dyn Call, req: &J, lang: Lang) -> J {
+    fn command(&self, host: &mut dyn Call, req: &J, lang: Lang) -> J {
         match req["id"].as_str().unwrap_or("") {
             "about" => about(lang),
-            id => no_command(id, lang),
+            id => match self.live_of(id) {
+                Some(live) => {
+                    let params = rustgis_kit::host::params_of(req);
+                    self.live.start(self, host, live, &params, lang)
+                }
+                None => no_command(id, lang),
+            },
+        }
+    }
+
+    fn event(&self, host: &mut dyn Call, name: &str) {
+        if name == "layers" {
+            self.live.changed(self, host);
         }
     }
 }
@@ -167,11 +190,16 @@ static EVENTS: Menu = Menu {
     },
     icon: Some("placement"),
     help: Some(Label {
-        en: "Point events and sections on routes.",
-        ru: "Точечные события и участки на маршрутах.",
+        en: "Point events and sections on routes, also as live layers.",
+        ru: "Точечные события и участки на маршрутах, в том числе динамическими слоями.",
     }),
     layout: None,
-    items: &[Item::Tool("point_events"), Item::Tool("line_events")],
+    items: &[
+        Item::Tool("point_events"),
+        Item::Tool("line_events"),
+        Item::Command("live-point-events"),
+        Item::Command("live-line-events"),
+    ],
 };
 static CHAINAGE: Menu = Menu {
     label: Label {
@@ -250,6 +278,9 @@ pub static TAB: Tab = Tab {
     ],
 };
 
+/// Значок команд 3.01 и 3.02 из набора RustGIS (`ALL` в `icons.rs`).
+const LIVE_ICON: &str = "run";
+
 /// Строка окна 1.01 в RustGIS: пример ложится в проект слоями.
 const DEMO_SUMMARY: (&str, &str) = (
     "Puts the demo example into the project as layers and tables: four routes, the ledger, point and line events and defects with reference answers, and runs it through the extension tools.",
@@ -267,7 +298,32 @@ pub fn manifest(catalog: &Catalog) -> Result<String, String> {
             ru.insert(DEMO_SUMMARY.0.into(), json!(DEMO_SUMMARY.1));
         }
     }
-    let (tab, tab_ru) = rustgis_kit::manifest::tab_section(&TAB, catalog, &OPTIONS, &["about"])?;
+    // 3.01 и 3.02 - команды сессии с окном полей инструмента модуля
+    let live_opts = Options {
+        toolbox: OPTIONS.toolbox,
+        offered: &["live_point_events", "live_line_events"],
+        xy_tables: &[],
+    };
+    let (live, live_ru) = rustgis_kit::manifest::tools_section_hiding(catalog, &live_opts, HIDDEN);
+    ru.extend(live_ru);
+    let mut ids = vec!["about".to_string()];
+    let mut lines = Vec::new();
+    for t in &live {
+        let id = t["id"].as_str().unwrap_or("").to_string();
+        let cmd = json!({
+            "id": id, "label": t["name"], "help": t["summary"], "icon": LIVE_ICON,
+            "form": t["params"],
+        });
+        lines.push(serde_json::to_string(&cmd).map_err(|e| e.to_string())?);
+        ids.push(id);
+    }
+    let base = MANIFEST.replacen(
+        "}\n  ],\n  \"i18n\"",
+        &format!("}},\n    {}\n  ],\n  \"i18n\"", lines.join(",\n    ")),
+        1,
+    );
+    let names: Vec<&str> = ids.iter().map(String::as_str).collect();
+    let (tab, tab_ru) = rustgis_kit::manifest::tab_section(&TAB, catalog, &OPTIONS, &names)?;
     ru.extend(tab_ru);
-    rustgis_kit::manifest::splice_all(MANIFEST, &tools, Some(&tab), &ru)
+    rustgis_kit::manifest::splice_all(&base, &tools, Some(&tab), &ru)
 }

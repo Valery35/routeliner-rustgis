@@ -20,7 +20,7 @@ use rustgis_kit::{Catalog, Failure, Lang};
 use serde_json::{Map, Value as J, json};
 
 use super::common::{Cx, rm};
-use crate::core::demo::{self, Demo, Dem};
+use crate::core::demo::{self, Dem, Demo};
 use crate::core::route::P3;
 use crate::pyfmt::Msg;
 
@@ -75,7 +75,9 @@ struct Layer {
 /// Слой из строк: `geom` - геометрия выхода каждой строки, `input` -
 /// геометрия входа (`parts` или `xyz`).
 fn layer(name: &str, kind: &str, rows: &[Row], geoms: &[(J, J)], types: &[&str]) -> Layer {
-    let fields: Vec<&str> = rows.first().map_or_else(Vec::new, |r| r.iter().map(|c| c.0).collect());
+    let fields: Vec<&str> = rows
+        .first()
+        .map_or_else(Vec::new, |r| r.iter().map(|c| c.0).collect());
     let numeric: Vec<&str> = fields
         .iter()
         .zip(types)
@@ -85,7 +87,10 @@ fn layer(name: &str, kind: &str, rows: &[Row], geoms: &[(J, J)], types: &[&str])
     let mut value = Vec::new();
     let mut feats = Vec::new();
     for (i, row) in rows.iter().enumerate() {
-        let attrs: Map<String, J> = row.iter().map(|(k, v)| ((*k).to_string(), v.clone())).collect();
+        let attrs: Map<String, J> = row
+            .iter()
+            .map(|(k, v)| ((*k).to_string(), v.clone()))
+            .collect();
         let mut v = json!({"id": i as i64 + 1, "attrs": attrs});
         let (input, output) = geoms.get(i).cloned().unwrap_or((J::Null, J::Null));
         if kind == "line" {
@@ -111,7 +116,15 @@ fn layer(name: &str, kind: &str, rows: &[Row], geoms: &[(J, J)], types: &[&str])
 }
 
 fn xyz(p: &P3) -> J {
-    json!([p[0], p[1], if p[2].is_finite() { json!(p[2]) } else { J::Null }])
+    json!([
+        p[0],
+        p[1],
+        if p[2].is_finite() {
+            json!(p[2])
+        } else {
+            J::Null
+        }
+    ])
 }
 
 /// Слои примера.
@@ -127,13 +140,22 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
     let rows: Vec<Row> = d
         .routes
         .iter()
-        .map(|r| vec![("route_id", json!(r.route_id)), ("name", json!(cx.tr(r.name)))])
+        .map(|r| {
+            vec![
+                ("route_id", json!(r.route_id)),
+                ("name", json!(cx.tr(r.name))),
+            ]
+        })
         .collect();
     let geoms: Vec<(J, J)> = d
         .routes
         .iter()
         .map(|r| {
-            let input: Vec<Vec<J>> = r.parts.iter().map(|p| p.iter().map(xyz).collect()).collect();
+            let input: Vec<Vec<J>> = r
+                .parts
+                .iter()
+                .map(|p| p.iter().map(xyz).collect())
+                .collect();
             // у слоя RustGIS высот нет: выход без Z
             let plan: Vec<Vec<J>> = r
                 .parts
@@ -160,7 +182,10 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
                 ("system", json!(l.system)),
                 ("station", json!(l.station)),
                 ("measure", r3(l.measure)),
-                ("station_ahead", l.station_ahead.map_or(J::Null, |s| json!(s))),
+                (
+                    "station_ahead",
+                    l.station_ahead.map_or(J::Null, |s| json!(s)),
+                ),
                 ("note", json!(cx.tr(l.note))),
             ]
         })
@@ -187,7 +212,14 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
                 ("exp_x", opt3(p.exp_x)),
                 ("exp_y", opt3(p.exp_y)),
                 ("exp_error", json!(p.exp_error)),
-                ("note", json!(if p.note.is_empty() { String::new() } else { cx.tr(p.note) })),
+                (
+                    "note",
+                    json!(if p.note.is_empty() {
+                        String::new()
+                    } else {
+                        cx.tr(p.note)
+                    }),
+                ),
             ]
         })
         .collect();
@@ -196,7 +228,10 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
         "none",
         &rows,
         &[],
-        &["int", "string", "string", "double", "int", "double", "double", "double", "string", "string"],
+        &[
+            "int", "string", "string", "double", "int", "double", "double", "double", "string",
+            "string",
+        ],
     );
 
     let rows: Vec<Row> = d
@@ -221,7 +256,9 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
         "none",
         &rows,
         &[],
-        &["int", "string", "string", "string", "double", "double", "double", "string", "string"],
+        &[
+            "int", "string", "string", "string", "double", "double", "double", "string", "string",
+        ],
     );
 
     let rows: Vec<Row> = d
@@ -240,7 +277,12 @@ fn layers(cx: &Cx<'_>, d: &Demo) -> Layers {
     let geoms: Vec<(J, J)> = d
         .defects
         .iter()
-        .map(|f| (json!([f.x, f.y, J::Null]), json!({"xyz": [f.x, f.y, J::Null]})))
+        .map(|f| {
+            (
+                json!([f.x, f.y, J::Null]),
+                json!({"xyz": [f.x, f.y, J::Null]}),
+            )
+        })
         .collect();
     let defects = layer(
         &layer_name(cx, "Дефекты"),
@@ -440,7 +482,9 @@ fn as_routes(o: &J) -> J {
                         .into_iter()
                         .flatten()
                         .enumerate()
-                        .map(|(k, v)| json!([v[0], v[1], v[2], m.get(k).cloned().unwrap_or(J::Null)]))
+                        .map(|(k, v)| {
+                            json!([v[0], v[1], v[2], m.get(k).cloned().unwrap_or(J::Null)])
+                        })
                         .collect()
                 })
                 .collect();
@@ -504,7 +548,10 @@ fn check(cx: &mut Cx<'_>, d: &Demo, l: &Layers, out: &mut Map<String, J>) -> Res
         .map(|r| r.0["rl_route"].as_str().unwrap_or("").to_string())
         .collect();
     let ok_routes = bad == ["R4"];
-    add("CHECK_ROUTES", materialize(&res["OUTPUT"], &l.routes, cx.tr("Собранные маршруты")));
+    add(
+        "CHECK_ROUTES",
+        materialize(&res["OUTPUT"], &l.routes, cx.tr("Собранные маршруты")),
+    );
 
     // точечные события
     let ev = [
@@ -542,8 +589,18 @@ fn check(cx: &mut Cx<'_>, d: &Demo, l: &Layers, out: &mut Map<String, J>) -> Res
         })
         .count();
     let p_total_all = d.points.len() - exp_err;
-    add("POINTS_OUT", materialize(&res["OUTPUT"], &l.points, cx.tr("Точечные события, результат")));
-    add("POINTS_ERR", materialize(&res["ERRORS"], &l.points, cx.tr("Точечные события, ошибки")));
+    add(
+        "POINTS_OUT",
+        materialize(
+            &res["OUTPUT"],
+            &l.points,
+            cx.tr("Точечные события, результат"),
+        ),
+    );
+    add(
+        "POINTS_ERR",
+        materialize(&res["ERRORS"], &l.points, cx.tr("Точечные события, ошибки")),
+    );
 
     // калибровка: пикетаж ведомости уходит в M, и те же события ставятся
     // по M без ведомости. Записи с номером участка пропускаются: участки
@@ -632,7 +689,10 @@ fn check(cx: &mut Cx<'_>, d: &Demo, l: &Layers, out: &mut Map<String, J>) -> Res
     }
     let l_err = records(&res["ERRORS"])
         .iter()
-        .filter(|(f, src, _)| src.and_then(|s| lns.get(&s)).is_some_and(|e| f["rl_error"] == e.exp_error))
+        .filter(|(f, src, _)| {
+            src.and_then(|s| lns.get(&s))
+                .is_some_and(|e| f["rl_error"] == e.exp_error)
+        })
         .count();
     let sections = materialize(&res["OUTPUT"], &l.lines, cx.tr("Участки, результат"));
     add("SECTIONS", sections);
@@ -780,7 +840,10 @@ fn check(cx: &mut Cx<'_>, d: &Demo, l: &Layers, out: &mut Map<String, J>) -> Res
             "list",
             format!(
                 "[{}]",
-                bad.iter().map(|b| format!("'{b}'")).collect::<Vec<_>>().join(", ")
+                bad.iter()
+                    .map(|b| format!("'{b}'"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
             ),
         )
     };

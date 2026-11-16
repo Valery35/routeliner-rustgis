@@ -18,7 +18,9 @@ fn fixture() -> J {
 }
 
 fn same(a: f64, b: &J, tol: f64, what: &str) {
-    let b = b.as_f64().unwrap_or_else(|| panic!("{what}: в записи не число {b}"));
+    let b = b
+        .as_f64()
+        .unwrap_or_else(|| panic!("{what}: в записи не число {b}"));
     assert!((a - b).abs() <= tol, "{what}: {a} против {b}");
 }
 
@@ -47,8 +49,11 @@ fn demo_check_matches_module() {
     line("Маршруты: не собран только R4 - да".into());
     line(format!(
         "Точечные: совпало {} из {} (наибольшее расхождение {:.1} мм), ожидаемых ошибок распознано {} из {}",
-        c["points_matched"], c["points_total"], c["points_worst_mm"].as_f64().unwrap(),
-        c["point_errors_recognized"], c["point_errors_expected"]
+        c["points_matched"],
+        c["points_total"],
+        c["points_worst_mm"].as_f64().unwrap(),
+        c["point_errors_recognized"],
+        c["point_errors_expected"]
     ));
     line(format!(
         "Калибровка: источники и уравнения маршрутов верны - да, точечные события по M совпали {} из {}",
@@ -58,11 +63,18 @@ fn demo_check_matches_module() {
         "Участки: совпало {} из {}, ошибка нулевой длины распознана: да",
         c["lines_matched"], c["lines_total"]
     ));
-    line(format!("Дефекты: привязано верно {} из {}", c["defects_matched"], c["defects_total"]));
+    line(format!(
+        "Дефекты: привязано верно {} из {}",
+        c["defects_matched"], c["defects_total"]
+    ));
     line(format!(
         "Профиль: отметки рельефа совпали {} из {} (наибольшее расхождение {:.1} мм), отметки оси R1 {} из {}, уравнений R3 {} из 2, чертёж построен: да",
-        c["profile_ground_matched"], c["profile_points"], c["profile_ground_worst_mm"].as_f64().unwrap(),
-        c["profile_axis_r1_matched"], c["profile_axis_r1_total"], c["profile_equations_r3"]
+        c["profile_ground_matched"],
+        c["profile_points"],
+        c["profile_ground_worst_mm"].as_f64().unwrap(),
+        c["profile_axis_r1_matched"],
+        c["profile_axis_r1_total"],
+        c["profile_equations_r3"]
     ));
     line("ПРОВЕРКА ПРОЙДЕНА".into());
     // пример и итоги проверки - слоями и таблицами
@@ -91,7 +103,11 @@ fn demo_through_rustgis_lands_in_place() {
     assert_eq!(first[0].as_f64().unwrap(), 455000.0);
     assert_eq!(first[1].as_f64().unwrap(), 6428000.0);
     for l in layers.iter().chain(ok["tables"].as_array().unwrap()) {
-        assert_eq!(l["geojson"]["crs"]["properties"]["name"], "EPSG:32640", "{}", l["name"]);
+        assert_eq!(
+            l["geojson"]["crs"]["properties"]["name"], "EPSG:32640",
+            "{}",
+            l["name"]
+        );
     }
     assert_eq!(layers.len() + ok["tables"].as_array().unwrap().len(), 15);
     let msgs = ok["messages"].as_array().unwrap();
@@ -126,7 +142,10 @@ fn demo_matches_module() {
     assert_eq!(d.ledger.len(), ledger.len());
     for (l, f) in d.ledger.iter().zip(ledger) {
         assert_eq!(l.station, f["station"]);
-        assert_eq!(l.station_ahead.map(J::from).unwrap_or(J::Null), f["station_ahead"]);
+        assert_eq!(
+            l.station_ahead.map(J::from).unwrap_or(J::Null),
+            f["station_ahead"]
+        );
         same(l.measure, &f["measure"], 0.0, "measure");
     }
 

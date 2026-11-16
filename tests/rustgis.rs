@@ -401,9 +401,14 @@ fn plugin_json_is_current() {
                 assert!(m["i18n"]["ru"][menu].is_string(), "{menu}");
                 assert!(m["i18n"]["ru"][it["help"].as_str().unwrap()].is_string());
                 for t in it["items"].as_array().unwrap() {
-                    let id = t.as_str().unwrap().strip_prefix("tool:").unwrap();
-                    assert!(ids.contains(&id), "{id}");
-                    in_menus.push(id);
+                    let t = t.as_str().unwrap();
+                    match t.strip_prefix("tool:") {
+                        Some(id) => {
+                            assert!(ids.contains(&id), "{id}");
+                            in_menus.push(id);
+                        }
+                        None => assert!(commands.contains(&t), "{t}"),
+                    }
                 }
             } else {
                 assert!(commands.contains(&it.as_str().unwrap()), "{it}");

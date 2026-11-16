@@ -76,6 +76,35 @@ fn demo_check_matches_module() {
     assert_eq!(out.as_object().unwrap().len(), 15);
 }
 
+/// 1.01 через RustGIS: пример встаёт на место. Слои уходят в метрах
+/// EPSG:32640 с членом `crs`, начало R1 - точка 455000, 6428000, как
+/// в примере модуля, а сообщения кончаются «ПРОВЕРКА ПРОЙДЕНА».
+#[test]
+fn demo_through_rustgis_lands_in_place() {
+    use routeliner_rustgis::product::Routeliner;
+    use rustgis_kit::Lang;
+    let p = Routeliner::new().unwrap();
+    let req = serde_json::json!({
+        "kind": "tool", "id": "demo", "lang": "ru",
+        "params": {"n_points": 60, "seed": 1, "run": true}, "layers": {}
+    });
+    let reply = rustgis_kit::runner::run_tool(&p, &req, Lang::Ru);
+    let ok = &reply["ok"];
+    assert!(ok.is_object(), "{reply}");
+    let layers = ok["layers"].as_array().unwrap();
+    let routes = &layers.iter().find(|l| l["name"] == "Маршруты").unwrap()["geojson"];
+    assert_eq!(routes["crs"]["properties"]["name"], "EPSG:32640");
+    let first = &routes["features"][0]["geometry"]["coordinates"][0][0];
+    assert_eq!(first[0].as_f64().unwrap(), 455000.0);
+    assert_eq!(first[1].as_f64().unwrap(), 6428000.0);
+    for l in layers.iter().chain(ok["tables"].as_array().unwrap()) {
+        assert_eq!(l["geojson"]["crs"]["properties"]["name"], "EPSG:32640", "{}", l["name"]);
+    }
+    assert_eq!(layers.len() + ok["tables"].as_array().unwrap().len(), 15);
+    let msgs = ok["messages"].as_array().unwrap();
+    assert_eq!(msgs.last().unwrap(), "ПРОВЕРКА ПРОЙДЕНА");
+}
+
 #[test]
 fn demo_matches_module() {
     let fx = fixture();

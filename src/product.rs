@@ -89,6 +89,12 @@ impl Product for Routeliner {
         crate::tools::run(tool, values, lang)
     }
 
+    /// 1.01 без входных слоёв: пример строится в метрах EPSG:32640, итог
+    /// уходит в RustGIS в этих метрах с членом `crs`.
+    fn native_frame(&self, tool: &Tool) -> Option<String> {
+        (tool.name == "demo").then(|| crate::core::demo::CRS.to_string())
+    }
+
     fn command(&self, _host: &mut dyn Call, req: &J, lang: Lang) -> J {
         match req["id"].as_str().unwrap_or("") {
             "about" => about(lang),

@@ -102,7 +102,7 @@ impl Product for Routeliner {
 pub const MANIFEST: &str = r#"{
   "id": "routeliner",
   "name": "Routeliner",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Route events and chainage for RustGIS. Routes are assembled from shuffled parts, chainage comes from a ledger with station equations or from control points, and every record that cannot be placed goes to the error table with its reason. The tools compute as the Routeliner plugin for QGIS does.",
   "author": "Inform++ LLC",
   "homepage": "https://github.com/Valery35/routeliner-rustgis",
@@ -110,7 +110,7 @@ pub const MANIFEST: &str = r#"{
   "runtime": "process",
   "session": true,
   "run": { "windows": ["bin/routeliner-rustgis.exe", "rustgis-plugin"] },
-  "minRustgisVersion": "0.6.0",
+  "minRustgisVersion": "0.7.0",
   "commands": [
     { "id": "about", "label": "About\nRouteliner", "help": "About the extension: version, a short description and links.", "icon": "about", "params": "{} (answers the title, the version, text paragraphs and links in the RustGIS language)" }
   ],
@@ -144,11 +144,15 @@ static ROUTES: Menu = Menu {
     },
     icon: Some("directions"),
     help: Some(Label {
-        en: "Route check and calibration.",
-        ru: "Проверка и калибровка маршрутов.",
+        en: "Demo example, route check and calibration.",
+        ru: "Демонстрационный пример, проверка и калибровка маршрутов.",
     }),
     layout: None,
-    items: &[Item::Tool("check_routes"), Item::Tool("calibrate_routes")],
+    items: &[
+        Item::Tool("demo"),
+        Item::Tool("check_routes"),
+        Item::Tool("calibrate_routes"),
+    ],
 };
 static EVENTS: Menu = Menu {
     label: Label {
@@ -240,9 +244,23 @@ pub static TAB: Tab = Tab {
     ],
 };
 
+/// Строка окна 1.01 в RustGIS: пример ложится в проект слоями.
+const DEMO_SUMMARY: (&str, &str) = (
+    "Puts the demo example into the project as layers and tables: four routes, the ledger, point and line events and defects with reference answers, and runs it through the extension tools.",
+    "Кладёт демонстрационный пример в проект слоями и таблицами: четыре маршрута, ведомость, точечные и линейные события и дефекты с эталонными ответами, и прогоняет его через инструменты расширения.",
+);
+
 /// `plugin.json` с разделами `tools` и `tab` и переводами их строк.
 pub fn manifest(catalog: &Catalog) -> Result<String, String> {
-    let (tools, mut ru) = rustgis_kit::manifest::tools_section_hiding(catalog, &OPTIONS, HIDDEN);
+    let (mut tools, mut ru) =
+        rustgis_kit::manifest::tools_section_hiding(catalog, &OPTIONS, HIDDEN);
+    // 1.01 модуля пишет GeoPackage, расширение кладёт пример слоями
+    for t in &mut tools {
+        if t["id"] == "demo" {
+            t["summary"] = json!(DEMO_SUMMARY.0);
+            ru.insert(DEMO_SUMMARY.0.into(), json!(DEMO_SUMMARY.1));
+        }
+    }
     let (tab, tab_ru) = rustgis_kit::manifest::tab_section(&TAB, catalog, &OPTIONS, &["about"])?;
     ru.extend(tab_ru);
     rustgis_kit::manifest::splice_all(MANIFEST, &tools, Some(&tab), &ru)

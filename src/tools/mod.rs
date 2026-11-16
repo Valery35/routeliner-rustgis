@@ -10,6 +10,7 @@
 //! `[{"id", "xyz", "attrs"}]`, выход `{"geometry", "fields", "features"}`.
 
 pub mod common;
+pub mod demo;
 pub mod events;
 pub mod expr;
 pub mod prep;
@@ -21,6 +22,7 @@ use serde_json::Value as J;
 /// Инструменты, перенесённые в расширение, по имени Processing, в порядке
 /// панели.
 pub const DONE: &[&str] = &[
+    "demo",
     "check_routes",
     "calibrate_routes",
     "point_events",
@@ -35,6 +37,7 @@ pub const DONE: &[&str] = &[
 pub fn run(tool: &Tool, values: &J, lang: Lang) -> Result<(J, Vec<String>), Failure> {
     let mut cx = common::Cx::new(tool, values, lang);
     let out = match tool.name.as_str() {
+        "demo" => demo::demo(&mut cx)?,
         "check_routes" => prep::check_routes(&mut cx)?,
         "calibrate_routes" => prep::calibrate_routes(&mut cx)?,
         "point_events" => events::events(&mut cx, false)?,

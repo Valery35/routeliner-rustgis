@@ -8,8 +8,10 @@
 
 pub mod assembler;
 pub mod chainage;
+pub mod demo;
 pub mod errors;
 pub mod events;
 pub mod profile;
+pub mod pyrand;
 pub mod route;
 pub mod stations;

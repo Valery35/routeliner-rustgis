@@ -166,6 +166,11 @@ fn quoted(name: &str) -> String {
 
 /// 5.02: чертёж профиля одного маршрута по таблице 5.01.
 pub fn profile_drawing(cx: &mut Cx<'_>) -> Result<J, Failure> {
+    drawing(cx).map(|(out, _)| out)
+}
+
+/// Чертёж 5.02 и его ширина в миллиметрах бумаги (`WIDTH_MM` модуля).
+pub fn drawing(cx: &mut Cx<'_>) -> Result<(J, f64), Failure> {
     let Some(table) = cx.layer("TABLE") else {
         return Err(cx.fail(Msg::new("Не задана таблица профиля")));
     };
@@ -409,7 +414,8 @@ pub fn profile_drawing(cx: &mut Cx<'_>) -> Result<J, Failure> {
         .f("w", sheet.width)
         .f("h", sheet.horizon),
     );
-    Ok(json!({
+    let width = sheet.width;
+    Ok((json!({
         "LINES": {"geometry": "line",
                   "fields": [["kind", "string"], ["row", "string"], ["color", "string"], ["width", "double"]],
                   "features": lines},
@@ -417,7 +423,7 @@ pub fn profile_drawing(cx: &mut Cx<'_>) -> Result<J, Failure> {
                   "fields": [["text", "string"], ["kind", "string"], ["rot", "double"], ["size", "double"],
                              ["halign", "string"], ["valign", "string"]],
                   "features": texts},
-    }))
+    }), width))
 }
 
 /// Участки текстовых строк по полю слоя: (мера начала, мера конца, текст).

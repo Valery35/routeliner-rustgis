@@ -361,6 +361,7 @@ fn plugin_json_is_current() {
     assert_eq!(
         ids,
         [
+            "demo",
             "check-routes",
             "calibrate-routes",
             "point-events",
@@ -371,8 +372,8 @@ fn plugin_json_is_current() {
             "profile-drawing"
         ]
     );
-    // вкладка проверена в RustGIS 0.6.0, раньше её нельзя обещать
-    assert_eq!(m["minRustgisVersion"], "0.6.0");
+    // решение автора 16.11.2026 - нижняя версия RustGIS 0.7.0
+    assert_eq!(m["minRustgisVersion"], "0.7.0");
     // каталог RustGIS показывает страницу расширения, адрес только https
     assert_eq!(
         m["homepage"],

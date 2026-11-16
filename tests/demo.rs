@@ -45,16 +45,9 @@ fn demo_check_matches_module() {
     let c = &want["cases"][0]["expected"]["check"];
     let line = |s: String| assert!(text.contains(&s), "нет строки «{s}» в\n{text}");
     line("Маршруты: не собран только R4 - да".into());
-    // Наибольшее расхождение - 2.0 мм, у записи модуля 1.631 мм. Запись
-    // собирает tools/make_fixtures.py модуля, он режет дугу R2 постоянным
-    // шагом 0,02°. QGIS 4.2.3 (curveToLine с MaximumAngle) выравнивает шаг
-    // по дуге, и его вершины совпадают с вершинами расширения до последнего
-    // знака (проверено 16.11.2026 в python-qgis), а самая дальняя точка
-    // события - на дуге.
-    assert!(c["points_worst_mm"].as_f64().unwrap() < 2.0);
     line(format!(
-        "Точечные: совпало {} из {} (наибольшее расхождение 2.0 мм), ожидаемых ошибок распознано {} из {}",
-        c["points_matched"], c["points_total"],
+        "Точечные: совпало {} из {} (наибольшее расхождение {:.1} мм), ожидаемых ошибок распознано {} из {}",
+        c["points_matched"], c["points_total"], c["points_worst_mm"].as_f64().unwrap(),
         c["point_errors_recognized"], c["point_errors_expected"]
     ));
     line(format!(
@@ -116,9 +109,8 @@ fn demo_matches_module() {
         assert_eq!(r.route_id, f["route_id"]);
         let parts = f["parts"].as_array().unwrap();
         assert_eq!(r.parts.len(), parts.len(), "{} частей", r.route_id);
-        // дуга R2: QGIS выравнивает шаг по дуге (angle / segs), запись
-        // модуля режет постоянным шагом 0,02°, вершины расходятся до 0,2 мм
-        let tol = if r.route_id == "R2" { 5e-4 } else { 1e-6 };
+        // запись модуля - до 6 знаков, дуга R2 нарезана как в QGIS 4.2.3
+        let tol = 1e-6;
         for (p, q) in r.parts.iter().zip(parts) {
             let q = q.as_array().unwrap();
             assert_eq!(p.len(), q.len(), "{} вершин", r.route_id);

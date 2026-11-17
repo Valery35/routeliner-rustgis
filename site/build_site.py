@@ -18,7 +18,7 @@ import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-MODULE_VERSION = "0.5.2"
+MODULE_VERSION = "0.5.4"
 RUST_VERSION = "0.1.1"
 CATALOG = "https://plugins.qgis.org/plugins/routeliner/"
 CATALOG_VERSION = CATALOG + "version/%s/" % MODULE_VERSION

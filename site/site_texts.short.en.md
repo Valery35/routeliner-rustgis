@@ -52,7 +52,7 @@ Manual
 
 Work log
 
-Version 0.5.2 in the repository
+Version 0.5.4 in the repository
 
 Releases on GitHub
 

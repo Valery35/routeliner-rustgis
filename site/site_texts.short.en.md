@@ -138,7 +138,7 @@ Eight tools out of eleven
 
 A ribbon tab of its own with the same numbers
 
-The extension has a ribbon tab of its own, Routeliner, with the groups «Routes», «Events», «Chainage», «Profile» and «Help». The result of events and locating repeats the fields of the source record and adds the rl_* fields. A record that cannot be placed goes to the error table together with its fields.
+The extension has a ribbon tab of its own, Routeliner, with the groups «Routes», «Events», «Chainage», «Profile» and «Help». The result of events and locating repeats the fields of the source record and adds the result fields. A record that cannot be placed goes to the error table together with its fields.
 
 Check against the plugin
 

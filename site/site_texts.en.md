@@ -12,7 +12,7 @@ The route chainage can be taken from the M values of its geometry and written in
 
 Eight tools of the plugin run in RustGIS, a desktop GIS written in Rust. The computation repeats the plugin and is checked against all 20 of its runs. QGIS is not needed.
 
-Route check and calibration, point events and sections, picket stakeout, point locating, the longitudinal profile table and drawing. The tool numbers, the rl_* fields and the error codes are the same as in the plugin.
+Route check and calibration, point events and sections, picket stakeout, point locating, the longitudinal profile table and drawing. The tool numbers, the result fields and the error codes are the same as in the plugin.
 
 The extension has its own RustGIS ribbon tab. RustGIS 0.6.0 has no live layers, no demo example, no rasters and no M values. RustGIS 0.6.0 or newer and Windows are required.
 
@@ -26,9 +26,9 @@ Routeliner for RustGIS places events on routes and keeps chainage in RustGIS the
 
 for RustGIS
 
-Routeliner for RustGIS places events on routes and keeps chainage in RustGIS the way the Routeliner plugin for QGIS does. The tool numbers, the rl_* field names and the error codes are the same in the extension and in the plugin. QGIS is not needed.
+Routeliner for RustGIS places events on routes and keeps chainage in RustGIS the way the Routeliner plugin for QGIS does. The tool numbers, the result field names and the error codes are the same in the extension and in the plugin. QGIS is not needed.
 
-The check uses the runs of Routeliner 0.5.4 on demo 1.01 with seed 1 in UTM zone 40N. The rl_message explanations are compared in Russian word for word, and a label like «ПК 14+71.24» matches the plugin character for character.
+The check uses the runs of Routeliner 0.5.4 on demo 1.01 with seed 1 in UTM zone 40N. The explanation texts are compared in Russian word for word, and a label like «ПК 14+71.24» matches the plugin character for character.
 
 RustGIS sends layers in WGS 84 degrees without Z and without M. The extension computes in metres of the UTM zone at the middle of the input and returns the result in degrees. This and the design of RustGIS give the following differences.
 

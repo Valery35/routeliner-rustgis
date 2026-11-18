@@ -270,7 +270,7 @@ MODULE_TEXTS = {
         "rg.c1.h": "Что умеет",
         "rg.c1.p": "Проверка и калибровка маршрутов, точечные события и "
                    "участки, пикетная разбивка, привязка точек, таблица и "
-                   "чертёж продольного профиля. Номера инструментов, поля rl_* "
+                   "чертёж продольного профиля. Номера инструментов, поля результата "
                    "и коды ошибок те же, что у модуля.",
         "rg.c2.h": "Чем отличается от модуля",
         "rg.c2.p": "У расширения своя вкладка ленты RustGIS. Динамических слоёв, "
@@ -348,7 +348,7 @@ MODULE_TEXTS = {
         "rg.c1.h": "What it does",
         "rg.c1.p": "Route check and calibration, point events and sections, "
                    "picket stakeout, point locating, the longitudinal profile "
-                   "table and drawing. The tool numbers, the rl_* fields and "
+                   "table and drawing. The tool numbers, the result fields and "
                    "the error codes are the same as in the plugin.",
         "rg.c2.h": "How it differs from the plugin",
         "rg.c2.p": "The extension has its own RustGIS ribbon tab. RustGIS 0.6.0 "
@@ -397,7 +397,7 @@ RUST_TEXTS = {
         "hero.lead": "Routeliner для RustGIS ставит события на маршруты и ведёт "
                      "пикетаж в RustGIS так же, как модуль QGIS Routeliner, и "
                      "QGIS для этого не нужен. Номера инструментов, имена полей "
-                     "rl_* и коды ошибок у расширения и у модуля одни и те же.",
+                     "результата и коды ошибок у расширения и у модуля одни и те же.",
         "cta.release": "Скачать выпуск " + RUST_VERSION,
         "cta.code": "Исходный код",
         "tools.eyebrow": "Восемь инструментов из одиннадцати",
@@ -405,13 +405,13 @@ RUST_TEXTS = {
         "tools.sub": "У расширения своя вкладка ленты Routeliner с группами "
                      "«Маршруты», «События», «Пикетаж», «Профиль» и «Справка». "
                      "Итог событий и привязки повторяет поля исходной записи и "
-                     "добавляет поля rl_*. Запись, которую нельзя поставить, "
+                     "добавляет поля результата. Запись, которую нельзя поставить, "
                      "попадает в таблицу ошибок вместе со своими полями.",
         "check.eyebrow": "Сверка с модулем",
         "check.h2": "Каждый инструмент сверен с прогонами модуля",
         "check.sub": "Сверка идёт по прогонам модуля Routeliner "
                      + MODULE_VERSION + " на демонстрационном примере 1.01 с "
-                     "зерном 1 в зоне UTM 40N. Пояснения rl_message сравниваются "
+                     "зерном 1 в зоне UTM 40N. Тексты пояснений сравниваются "
                      "по-русски слово в слово, а подписи вида «ПК 14+71.24» "
                      "совпадают с модулем знак в знак.",
         "fact1": "прогонов модуля по восьми инструментам, поля совпадают без "
@@ -464,7 +464,7 @@ RUST_TEXTS = {
         "hero.h1": "Chainage and route events in RustGIS",
         "hero.lead": "Routeliner for RustGIS places events on routes and keeps "
                      "chainage in RustGIS the way the Routeliner plugin for "
-                     "QGIS does. The tool numbers, the rl_* field names and the "
+                     "QGIS does. The tool numbers, the result field names and the "
                      "error codes are the same in the extension and in the "
                      "plugin. QGIS is not needed.",
         "cta.release": "Download release " + RUST_VERSION,
@@ -474,14 +474,14 @@ RUST_TEXTS = {
         "tools.sub": "The extension has a ribbon tab of its own, Routeliner, "
                      "with the groups «Routes», «Events», «Chainage», «Profile» "
                      "and «Help». The result of events and locating repeats the "
-                     "fields of the source record and adds the rl_* fields. A "
+                     "fields of the source record and adds the result fields. A "
                      "record that cannot be placed goes to the error table "
                      "together with its fields.",
         "check.eyebrow": "Check against the plugin",
         "check.h2": "Every tool is checked against the plugin runs",
         "check.sub": "The check uses the runs of Routeliner " + MODULE_VERSION
                      + " on demo 1.01 with seed 1 in UTM zone 40N. The "
-                     "rl_message explanations are compared in Russian word for "
+                     "explanation texts are compared in Russian word for "
                      "word, and a label like «ПК 14+71.24» matches the plugin "
                      "character for character.",
         "fact1": "plugin runs over eight tools, the fields agree without "
